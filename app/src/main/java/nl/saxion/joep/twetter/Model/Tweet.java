@@ -10,12 +10,7 @@ public class Tweet {
     private ArrayList<UrlTweet> url = new ArrayList<>();
     private ArrayList<HashTags> hashTags = new ArrayList<>();
 
-
-
     private String rawText;
-    private String profileImage;
-    private String name;
-    private String screen_name;
 
 
 

@@ -5,6 +5,14 @@ package nl.saxion.joep.twetter.Model;
  */
 public class Media {
 
+    private String url;
+    private String type;
+
+
+    private int id;
+    private int startIndex;
+    private int endIndex;
+
 
 
 }

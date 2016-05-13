@@ -1,5 +1,7 @@
 package nl.saxion.joep.twetter.Model;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 /**
@@ -12,7 +14,11 @@ public class Tweet {
 
     private String rawText;
 
+    public Tweet(JSONObject tweet) {
+        
 
+
+    }
 
     // dit is de methode om een url toe te voegen voor elk url wat word toegevroeg in een bericht.
     private void addUrl(){

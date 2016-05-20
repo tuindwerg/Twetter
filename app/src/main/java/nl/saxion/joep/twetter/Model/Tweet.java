@@ -20,7 +20,7 @@ public class Tweet {
 
     public Tweet(JSONObject tweet) {
         inputJSONObject=tweet;
-        inputJSONObject.getString()
+        //inputJSONObject.getString()
 
 
 

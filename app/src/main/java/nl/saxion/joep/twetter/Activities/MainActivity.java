@@ -1,7 +1,7 @@
 package nl.saxion.joep.twetter.Activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -23,13 +23,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        try{
-            String assetString = JSONParser.readAssetIntoString(this,"tweets.json");
+        try {
+            String assetString = JSONParser.readAssetIntoString(this, "tweets.json");
             JSONObject assetOBJ = new JSONObject(assetString);
 
             JSONArray statuses = new JSONArray(assetOBJ.getJSONArray("statuses"));
 
-            for (int i = 0;1<statuses.length(); i++){
+            for (int i = 0; 1 < statuses.length(); i++) {
                 JSONObject newTweetJsonObject = statuses.getJSONObject(i);
 
                 model.addTweet(new Tweet(newTweetJsonObject));
@@ -37,11 +37,10 @@ public class MainActivity extends AppCompatActivity {
             }
 
 
-
-        }catch (IOException ioE){
-            Log.e("ERROR","IOException: read asset into string");
-        }catch (JSONException jsoE){
-            Log.e("ERROR","JSONException @ mainactivity");
+        } catch (IOException ioE) {
+            Log.e("ERROR", "IOException: read asset into string");
+        } catch (JSONException jsoE) {
+            Log.e("ERROR", "JSONException @ mainactivity");
         }
 
 

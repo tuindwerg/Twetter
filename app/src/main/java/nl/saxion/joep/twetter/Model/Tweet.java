@@ -1,5 +1,6 @@
 package nl.saxion.joep.twetter.Model;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -8,6 +9,9 @@ import java.util.ArrayList;
  * Created by joepv on 13.mei.2016.
  */
 public class Tweet {
+    private JSONObject inputJSONObject;
+
+    private TweetOwner owner;
 
     private ArrayList<UrlTweet> url = new ArrayList<>();
     private ArrayList<HashTags> hashTags = new ArrayList<>();
@@ -15,7 +19,10 @@ public class Tweet {
     private String rawText;
 
     public Tweet(JSONObject tweet) {
-        
+        inputJSONObject=tweet;
+        inputJSONObject.getString()
+
+
 
 
     }

@@ -1,5 +1,9 @@
 package nl.saxion.joep.twetter.Model;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by Dilan on 13-5-2016.
  */
@@ -9,15 +13,30 @@ public class UrlTweet {
     private String displayUrl;
 
     private int startIndex;
-    private int eindIndex;
+    private int endIndex;
 
 
-    public UrlTweet(String url,String displayUrl, int startIndex, int eindIndex) {
-        this.url = url;
-        this.displayUrl = displayUrl;
-        this.startIndex = startIndex;
-        this.eindIndex = eindIndex;
+
+    public UrlTweet(JSONObject jsonObject) {
+        try {
+            url = jsonObject.getString("url");
+
+            displayUrl = jsonObject.getString("display_url");
+
+            // indeces is een array met 2 elementen
+            JSONArray indeces = jsonObject.getJSONArray("indices");
+            startIndex = indeces.getInt(0);
+            endIndex = indeces.getInt(1);
+
+
+        } catch (JSONException e) {
+
+            // betere foutmelding. moet nog gedaan worden.
+            e.printStackTrace();
+        }
     }
+
+
 
     public String getDisplayUrl() {
         return displayUrl;
@@ -31,7 +50,7 @@ public class UrlTweet {
         return startIndex;
     }
 
-    public int getEindIndex() {
-        return eindIndex;
+    public int getEndIndex() {
+        return endIndex;
     }
 }

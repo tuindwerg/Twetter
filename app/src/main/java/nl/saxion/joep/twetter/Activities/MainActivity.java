@@ -26,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
         try {
             String assetString = JSONParser.readAssetIntoString(this, "tweets.json");
             JSONObject assetOBJ = new JSONObject(assetString);
-
-            JSONArray statuses = new JSONArray(assetOBJ.getJSONArray("statuses"));
+ 
+            JSONArray statuses = assetOBJ.getJSONArray("statuses");
 
             for (int i = 0; 1 < statuses.length(); i++) {
                 JSONObject newTweetJsonObject = statuses.getJSONObject(i);

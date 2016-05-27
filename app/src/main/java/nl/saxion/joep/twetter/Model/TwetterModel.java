@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class TwetterModel {
     private static TwetterModel ourInstance = new TwetterModel();
     private ArrayList<Tweet> tweetArrayList;
+    private String bearertoken;
 
     public static TwetterModel getInstance() {
         return ourInstance;
@@ -32,4 +33,11 @@ public class TwetterModel {
         // return tweet
     }
 
+    public String getBearertoken() {
+        return bearertoken;
+    }
+
+    public void setBearertoken(String bearertoken) {
+        this.bearertoken = bearertoken;
+    }
 }

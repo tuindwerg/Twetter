@@ -18,7 +18,7 @@ import java.net.URL;
  */
 
 public class GetImagesASyncTask extends AsyncTask<String, Void, Bitmap> {
-    ImageView bmImage;
+    private ImageView bmImage;
 
     public GetImagesASyncTask(ImageView bmImage) {
         this.bmImage = bmImage;

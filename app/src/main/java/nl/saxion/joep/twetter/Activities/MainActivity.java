@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -39,18 +40,28 @@ public class MainActivity extends AppCompatActivity {
         OAuthAsyncTask authenticationTask = new OAuthAsyncTask();
         authenticationTask.execute();
 
-        while (model.getBearertoken() == null){
-            Log.e("testTag","still empty");
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
+        for (int i = 0; i < 20; i++) {
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (model.getBearertoken() == null) {
+                        Log.e("testTag", "still empty");
+                    } else {
+                        Log.e("testTag", "NOT  empty!!");
+                        Log.e("testTag", "bearer token = " + model.getBearertoken());
+                    }
+                }
+            }, 1000);
+
         }
 
-        Log.e("testTag", "not empty anymore :D:DDD");
-        Log.e("testTag", "not empty anymore :D:DDD");
-        Log.e("testTag", "not empty anymore :D:DDD");
+
+//
+//        Log.e("testTag", "not empty anymore :D:DDD");
+//        Log.e("testTag", "not empty anymore :D:DDD");
+//        Log.e("testTag", "not empty anymore :D:DDD");
 
 
 

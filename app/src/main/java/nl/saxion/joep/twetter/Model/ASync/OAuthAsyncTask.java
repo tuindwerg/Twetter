@@ -43,13 +43,13 @@ public class OAuthAsyncTask extends AsyncTask<String, Void, String> {
             byte[] body;
 
 
-            URL url = new URL("http://api.twitter.com/oauth2/token");
+            URL url = new URL("https://api.twitter.com/oauth2/token");
             httpURLConnection = (HttpURLConnection) url.openConnection();
             Log.e(LOGTAG, "test1, opening HttpURLConnection");
             httpURLConnection.setRequestMethod("POST");
             Log.e(LOGTAG, "test2, setting request method");
-            httpURLConnection.setConnectTimeout(10000);
-            httpURLConnection.setReadTimeout(10000);
+            //httpURLConnection.setConnectTimeout(10000);
+           // httpURLConnection.setReadTimeout(10000);
 
             String authString = URLEncoder.encode(API_KEY, CHARSET_UTF_8) + ":" + URLEncoder.encode(API_SECRET, CHARSET_UTF_8);
             Log.e(LOGTAG, "test3, encoding keys to authString");
@@ -62,11 +62,11 @@ public class OAuthAsyncTask extends AsyncTask<String, Void, String> {
             Log.e(LOGTAG, "test6, setting request property [Content-Type]");
 
             httpURLConnection.setDoOutput(true);
-            httpURLConnection.setDoInput(true);
+            //httpURLConnection.setDoInput(true);
             Log.e(LOGTAG, "test7, setting doOutput>true AND setDoInput > true");
 
 
-            body = "grant_type=client_credentials".getBytes("UTF-8");
+            body = "grant_type=client_credentials".getBytes(CHARSET_UTF_8);
 
             httpURLConnection.setFixedLengthStreamingMode(body.length);
             Log.e(LOGTAG, "test8, setting fixed lenght stream mode");
@@ -74,8 +74,10 @@ public class OAuthAsyncTask extends AsyncTask<String, Void, String> {
             Log.e(LOGTAG, "test9, initializing outputstream with httpURLConnection.getOutputStream");
 
             os.write(body);
+            os.close();
             Log.e(LOGTAG, "test10, writing 'body' to outputstream");
-
+            int testInt = httpURLConnection.getResponseCode();
+            Log.e(LOGTAG,"responsecode = " + testInt);
 
 
 

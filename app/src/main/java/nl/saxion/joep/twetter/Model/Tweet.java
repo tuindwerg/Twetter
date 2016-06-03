@@ -25,6 +25,17 @@ public class Tweet {
     private String rawText;
 
     public Tweet(JSONObject tweet) {
+
+        try {
+            String profileImage = tweet.getJSONObject("user").getString("profile_image_url");
+            String name = tweet.getJSONObject("user").getString("screen_name");
+            String screen_name = tweet.getJSONObject("user").getString("name");
+            owner = new TweetOwner(profileImage,name,screen_name);
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         try {
             JSONArray urlJson = tweet.getJSONArray("urls");
             for (int i = 0; i < urlJson.length(); i++) {

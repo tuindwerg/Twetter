@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import nl.saxion.joep.twetter.Model.ASync.GetImagesASyncTask;
 import nl.saxion.joep.twetter.Model.Tweet;
 import nl.saxion.joep.twetter.R;
 
@@ -37,7 +38,15 @@ public class TweetListAdapter extends ArrayAdapter<Tweet> {
         tweetText = (TextView) convertView.findViewById(R.id.tv_tweet_text);
         profilePicture = (ImageView) convertView.findViewById(R.id.iv_profile_picture);
 
-        name.setText(getItem(.));
+        name.setText(getItem(position).getOwner().getName());
+        screenname.setText(getItem(position).getOwner().getScreen_name());
+        GetImagesASyncTask getImagesASyncTask = new GetImagesASyncTask(profilePicture);
+        getImagesASyncTask.execute(getItem(position).getOwner().getProfileImage());
+        //TODO add ACTUAL tweet text in Tweet.java
+        //tweetText.setText(getItem(position).get);
+
+
+
         return convertView;
     }
 }

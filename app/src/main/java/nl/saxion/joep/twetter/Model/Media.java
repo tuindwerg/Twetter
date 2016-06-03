@@ -33,5 +33,23 @@ public class Media {
     }
 
 
+    public String getUrl() {
+        return url;
+    }
 
+    public String getType() {
+        return type;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getStartIndex() {
+        return startIndex;
+    }
+
+    public int getEndIndex() {
+        return endIndex;
+    }
 }

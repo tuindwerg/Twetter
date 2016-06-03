@@ -104,5 +104,31 @@ public class Tweet {
         //        hashTags.add();
     }
 
+    public int getId() {
+        return id;
+    }
 
+    public TweetOwner getOwner() {
+        return owner;
+    }
+
+    public ArrayList<UrlTweet> getUrl() {
+        return url;
+    }
+
+    public ArrayList<HashTags> getHashTags() {
+        return hashTags;
+    }
+
+    public ArrayList<UserMentions> getUserMentionses() {
+        return userMentionses;
+    }
+
+    public ArrayList<Media> getMedias() {
+        return medias;
+    }
+
+    public String getCreatedAtString() {
+        return create;
+    }
 }

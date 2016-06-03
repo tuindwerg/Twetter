@@ -43,9 +43,7 @@ public class OAuthAsyncTask extends AsyncTask<String, Void, String> {
 
             URL url = new URL("https://api.twitter.com/oauth2/token");
             httpURLConnection = (HttpURLConnection) url.openConnection();
-            Log.e(LOGTAG, "test1, opening HttpURLConnection");
             httpURLConnection.setRequestMethod("POST");
-            Log.e(LOGTAG, "test2, setting request method");
             httpURLConnection.setConnectTimeout(10000);
             httpURLConnection.setReadTimeout(10000);
 

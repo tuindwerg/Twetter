@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.ListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,9 +20,12 @@ import nl.saxion.joep.twetter.Model.JSONParser;
 import nl.saxion.joep.twetter.Model.Tweet;
 import nl.saxion.joep.twetter.Model.TwetterModel;
 import nl.saxion.joep.twetter.R;
+import nl.saxion.joep.twetter.View.TweetListAdapter;
 
 public class MainActivity extends AppCompatActivity {
     TwetterModel model = TwetterModel.getInstance();
+    ListView listView;
+    TweetListAdapter tweetListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,35 +44,14 @@ public class MainActivity extends AppCompatActivity {
         authenticationTask.execute();
 
 
-        for (int i = 0; i < 20; i++) {
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (model.getBearertoken() == null) {
-                        Log.e("testTag", "still empty");
-                    } else {
-                        Log.e("testTag", "NOT  empty!!");
-                        Log.e("testTag", "bearer token = " + model.getBearertoken());
-                    }
-                }
-            }, 1000);
-
+        if (model.getBearertoken() == null){
+            try {
+                throw new Exception("bearer token is null");
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("testTag","");
+            }
         }
-
-
-//
-//        Log.e("testTag", "not empty anymore :D:DDD");
-//        Log.e("testTag", "not empty anymore :D:DDD");
-//        Log.e("testTag", "not empty anymore :D:DDD");
-
-
-
-
-
-
-
-
 
 
 
@@ -79,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             String assetString = JSONParser.readAssetIntoString(this, "tweets.json");
             JSONObject assetOBJ = new JSONObject(assetString);
- 
+
             JSONArray statuses = assetOBJ.getJSONArray("statuses");
 
             for (int i = 0; 1 < statuses.length(); i++) {
@@ -94,6 +77,11 @@ public class MainActivity extends AppCompatActivity {
             Log.e("ERROR", "IOException: read asset into string");
         } catch (JSONException jsoE) {
             Log.e("ERROR", "JSONException @ mainactivity");
+        }finally {
+            listView = (ListView)findViewById(R.id.tweetlistView);
+            tweetListAdapter = new TweetListAdapter(this,model.getTweetArrayList());
+
+            listView.setAdapter(tweetListAdapter);
         }
 
 

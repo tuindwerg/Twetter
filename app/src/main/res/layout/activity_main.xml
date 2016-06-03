@@ -7,10 +7,10 @@
     tools:context=".Activities.MainActivity">
 
     <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/tweetlistView"
+        android:layout_width="wrap_content"
+        tools:listitem="@layout/tweet_list_item"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        />
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

@@ -2,13 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="7dp"
+    android:layout_marginTop="7dp"
     android:orientation="vertical"
     android:paddingEnd="10dp"
     android:paddingStart="6dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <ImageView
@@ -20,28 +22,54 @@
             android:maxWidth="45dp"
             android:src="@drawable/default_profile_0_400x400" />
 
-        <TextView
-            android:id="@+id/tv_display_name"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="5dp"
+            android:orientation="vertical">
 
-            android:text="default_display_name" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:text="\@"
-            android:textColor="#A0A0A0" />
+                <TextView
+                    android:id="@+id/tv_display_name"
+                    android:layout_width="wrap_content"
+                    android:textSize="17sp"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="5dp"
 
-        <TextView
-            android:id="@+id/tv_screen_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="1dp"
-            android:text="screenname"
-            android:textColor="#A0A0A0" />
+                    android:text="default_display_name" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="8dp"
+                    android:text="\@"
+                    android:textColor="#A0A0A0" />
+
+                <TextView
+                    android:id="@+id/tv_screen_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="1dp"
+                    android:text="screenname"
+                    android:textColor="#A0A0A0" />
+
+
+            </LinearLayout>
+
+            <TextView
+                android:text="default tweet text"
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:textSize="16sp"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_tweet_text" />
+
+
+        </LinearLayout>
+
 
     </LinearLayout>
 

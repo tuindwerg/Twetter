@@ -15,7 +15,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 import nl.saxion.joep.twetter.Model.ASync.OAuthAsyncTask;
-import nl.saxion.joep.twetter.Model.ASync.OAuthAsyncTask2;
 import nl.saxion.joep.twetter.Model.JSONParser;
 import nl.saxion.joep.twetter.Model.Tweet;
 import nl.saxion.joep.twetter.Model.TwetterModel;

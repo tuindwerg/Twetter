@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by joepv on 13.mei.2016.
@@ -21,10 +22,17 @@ public class Tweet {
 
 
     private int id;
+    private String create;
 
-    private String rawText;
 
     public Tweet(JSONObject tweet) {
+
+        try {
+            create = tweet.getJSONObject("user").getString("created_at");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         try {
             String profileImage = tweet.getJSONObject("user").getString("profile_image_url");

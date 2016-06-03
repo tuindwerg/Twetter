@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import java.util.List;
 
 import nl.saxion.joep.twetter.Model.Tweet;
+import nl.saxion.joep.twetter.R;
 
 /**
  * Created by joepv on 13.mei.2016.
@@ -22,8 +23,8 @@ public class TweetListAdapter extends ArrayAdapter<Tweet> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView ==null){
-            //convertView= LayoutInflater.from(getContext()).inflate()
+        if (convertView == null) {
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.tweet_list_item, parent, false);
         }
 
 

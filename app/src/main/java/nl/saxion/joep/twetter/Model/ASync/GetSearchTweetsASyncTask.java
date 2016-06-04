@@ -22,10 +22,10 @@ import nl.saxion.joep.twetter.Model.TwetterModel;
 /**
  * Created by joepv on 20.mei.2016.
  */
-public class GetTweetsASyncTask extends  AsyncTask<String, Void, String> {
+public class GetSearchTweetsASyncTask extends  AsyncTask<String, Void, String> {
 
 
-    public GetTweetsASyncTask() {
+    public GetSearchTweetsASyncTask() {
         super();
     }
 

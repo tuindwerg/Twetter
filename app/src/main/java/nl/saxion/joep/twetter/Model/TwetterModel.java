@@ -10,6 +10,17 @@ public class TwetterModel {
     private ArrayList<Tweet> tweetArrayList;
     private String bearertoken;
 
+    private final String API_KEY = "tvb7d9ZTsDNaLwlkEHrGrjiyD";
+    private final String API_SECRET = "aILd0hy5piSZs9p4QM51V98vZeyqnF3qK4g2es8puxeD2lIbGQ";
+
+    public String getApiKey() {
+        return API_KEY;
+    }
+
+    public String getApiSecret() {
+        return API_SECRET;
+    }
+
     public static TwetterModel getInstance() {
         return ourInstance;
     }
@@ -18,7 +29,7 @@ public class TwetterModel {
         tweetArrayList = new ArrayList<>();
     }
 
-    public void addTweet(Tweet tweet){
+    public void addTweet(Tweet tweet) {
         tweetArrayList.add(tweet);
     }
 
@@ -29,7 +40,7 @@ public class TwetterModel {
     /**
      * TODO
      */
-    public void getTweet(){
+    public void getTweet() {
         // return tweet
     }
 

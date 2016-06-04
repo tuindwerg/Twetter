@@ -26,8 +26,7 @@ import nl.saxion.joep.twetter.Model.TwetterModel;
  */
 
 public class OAuthAsyncTask extends AsyncTask<String, Void, String> {
-    private static final String API_KEY = "tvb7d9ZTsDNaLwlkEHrGrjiyD";
-    private static final String API_SECRET = "aILd0hy5piSZs9p4QM51V98vZeyqnF3qK4g2es8puxeD2lIbGQ";
+
     private static final String CHARSET_UTF_8 = "UTF-8";
 
     private final String LOGTAG = "testTag3";
@@ -47,7 +46,7 @@ public class OAuthAsyncTask extends AsyncTask<String, Void, String> {
             httpURLConnection.setConnectTimeout(10000);
             httpURLConnection.setReadTimeout(10000);
 
-            String authString = URLEncoder.encode(API_KEY, CHARSET_UTF_8) + ":" + URLEncoder.encode(API_SECRET, CHARSET_UTF_8);
+            String authString = URLEncoder.encode(TwetterModel.getInstance().getApiKey(), CHARSET_UTF_8) + ":" + URLEncoder.encode(TwetterModel.getInstance().getApiSecret(), CHARSET_UTF_8);
 
             String authStringBase64 = Base64.encodeToString(authString.getBytes(CHARSET_UTF_8), Base64.NO_WRAP);
 
@@ -75,7 +74,7 @@ public class OAuthAsyncTask extends AsyncTask<String, Void, String> {
             String response = IOUtils.toString(is, CHARSET_UTF_8);
 
             Log.e(LOGTAG, "response = " + response);
-            os.close();
+            is.close();
             return response;
 
 

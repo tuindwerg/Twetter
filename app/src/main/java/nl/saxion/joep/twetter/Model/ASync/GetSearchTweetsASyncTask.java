@@ -23,7 +23,7 @@ import nl.saxion.joep.twetter.Model.TwetterModel;
  * Created by joepv on 20.mei.2016.
  */
 public class GetSearchTweetsASyncTask extends  AsyncTask<String, Void, String> {
-
+    private static final String CHARSET_UTF_8 = "UTF-8";
 
     public GetSearchTweetsASyncTask() {
         super();
@@ -49,31 +49,26 @@ public class GetSearchTweetsASyncTask extends  AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... params) {
         String response;
-        InputStream inputStream = null;
+        InputStream is = null;
         try {
+            String query = URLEncoder.encode(params[0], CHARSET_UTF_8);
 
-            URLEncoder.encode(params[0],"UTF-8");
-
-            URL url = new URL("https://api.twitter.com/1.1/search/tweets.json");
+            URL url = new URL("https://api.twitter.com/1.1/search/tweets.json?q=" + query);
 
 
-            //URLEncoder.encode(params[0],"UTF-8");
             HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
             httpURLConnection.setReadTimeout(10000);
             httpURLConnection.setConnectTimeout(15000);
             httpURLConnection.setRequestMethod("GET");
-            httpURLConnection.setDoInput(true);
+            httpURLConnection.setRequestProperty("Authorization", "Bearer "  + TwetterModel.getInstance().getBearertoken());
 
-            httpURLConnection.connect();
 
             int responseCode = httpURLConnection.getResponseCode();
 
             if (responseCode ==HttpURLConnection.HTTP_OK){
-               inputStream = httpURLConnection.getInputStream();
-                response = IOUtils.toString(inputStream, "UTF-8");
-
-                //TODO do stuff
-
+               is = httpURLConnection.getInputStream();
+                response = IOUtils.toString(is, "UTF-8");
+                is.close();
 
                 return response;
 
@@ -90,8 +85,6 @@ public class GetSearchTweetsASyncTask extends  AsyncTask<String, Void, String> {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
-            IOUtils.closeQuietly(inputStream);
         }
 
 
@@ -107,6 +100,7 @@ public class GetSearchTweetsASyncTask extends  AsyncTask<String, Void, String> {
                 JSONObject newTweetJsonObject = statuses.getJSONObject(i);
                 TwetterModel.getInstance().addTweet(new Tweet(newTweetJsonObject));
             }
+
 
 
 

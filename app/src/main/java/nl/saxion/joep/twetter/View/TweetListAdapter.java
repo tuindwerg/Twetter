@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import nl.saxion.joep.twetter.Model.ASync.GetImagesASyncTask;
@@ -28,6 +30,7 @@ public class TweetListAdapter extends ArrayAdapter<Tweet> {
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.tweet_list_item, parent, false);
+
         }
 
         TextView name, screenname, tweetText;
@@ -40,10 +43,14 @@ public class TweetListAdapter extends ArrayAdapter<Tweet> {
 
         name.setText(getItem(position).getOwner().getName());
         screenname.setText(getItem(position).getOwner().getScreen_name());
-        GetImagesASyncTask getImagesASyncTask = new GetImagesASyncTask(profilePicture);
-        getImagesASyncTask.execute(getItem(position).getOwner().getProfileImage());
+        Picasso.with(getContext())
+                .load(getItem(position).getOwner().getProfileImage())
+                .into(profilePicture);
+
+//        GetImagesASyncTask getImagesASyncTask = new GetImagesASyncTask(profilePicture);
+//        getImagesASyncTask.execute(getItem(position).getOwner().getProfileImage());
         //TODO add ACTUAL tweet text in Tweet.java
-        //tweetText.setText(getItem(position).get);
+        tweetText.setText(getItem(position).getActualTweetString());
 
 
 

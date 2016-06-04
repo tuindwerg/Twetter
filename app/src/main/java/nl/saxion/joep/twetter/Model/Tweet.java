@@ -1,5 +1,7 @@
 package nl.saxion.joep.twetter.Model;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,10 +22,13 @@ public class Tweet {
     private ArrayList<UserMentions> userMentionses = new ArrayList<>();
     private ArrayList<Media> medias = new ArrayList<>();
 
-
     private int id;
     private String create;
+    private String actualTweetString;
 
+    public String getActualTweetString() {
+        return actualTweetString;
+    }
 
     public Tweet(JSONObject tweet) {
 
@@ -90,6 +95,13 @@ public class Tweet {
         } catch (JSONException e) {
             // betere foutmelding.
             e.printStackTrace();
+        }
+        try{
+            actualTweetString = tweet.getString("text");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e("testTag","cant get tweet text :c");
         }
 
 

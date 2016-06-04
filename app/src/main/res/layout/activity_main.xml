@@ -1,16 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".Activities.MainActivity">
 
-    <ListView
-        android:id="@+id/tweetlistView"
-        android:layout_width="wrap_content"
-        tools:listitem="@layout/tweet_list_item"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:focusableInTouchMode="true"
+        android:descendantFocusability="beforeDescendants"
+        android:layout_marginBottom="15dp"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/et_searchbox"
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:paddingTop="5dp"
+            android:cursorVisible="false"
+            android:paddingBottom="5dp"
+            android:background="@drawable/textbox2"
+            android:layout_weight="115"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="Search Bar"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:text="Zoek"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ListView
+            android:id="@+id/tweetlistView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/et_searchbox"
+            android:layout_centerHorizontal="true"
+            tools:listitem="@layout/tweet_list_item" />
+    </LinearLayout>
+
+</LinearLayout>

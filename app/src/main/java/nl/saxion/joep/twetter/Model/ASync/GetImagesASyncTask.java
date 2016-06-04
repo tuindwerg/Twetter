@@ -38,7 +38,7 @@ public class GetImagesASyncTask extends AsyncTask<String, Void, Bitmap> {
             InputStream inputStream = new URL(urldisplay).openStream();
             mIcon11 = BitmapFactory.decodeStream(inputStream);
 
-
+            inputStream.close();
         } catch (IOException e) {
             Log.e("ERROR", e.getMessage());
             e.printStackTrace();

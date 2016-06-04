@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class TwetterModel {
     private static TwetterModel ourInstance = new TwetterModel();
     private ArrayList<Tweet> tweetArrayList;
+    private ArrayList<Tweet> searchTweetArrayList;
     private String bearertoken;
 
     private final String API_KEY = "tvb7d9ZTsDNaLwlkEHrGrjiyD";
@@ -27,15 +28,25 @@ public class TwetterModel {
 
     private TwetterModel() {
         tweetArrayList = new ArrayList<>();
+        searchTweetArrayList = new ArrayList<>();
     }
 
     public void addTweet(Tweet tweet) {
         tweetArrayList.add(tweet);
     }
 
+    public void addSearchTweet(Tweet tweet) {
+        searchTweetArrayList.add(tweet);
+    }
+
     public ArrayList<Tweet> getTweetArrayList() {
         return tweetArrayList;
     }
+
+    public ArrayList<Tweet> getSearchTweetArrayList() {
+        return searchTweetArrayList;
+    }
+
 
     /**
      * TODO

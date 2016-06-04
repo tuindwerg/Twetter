@@ -1,12 +1,15 @@
 package nl.saxion.joep.twetter.Activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import org.json.JSONArray;
@@ -23,20 +26,27 @@ import nl.saxion.joep.twetter.R;
 import nl.saxion.joep.twetter.View.TweetListAdapter;
 
 public class MainActivity extends AppCompatActivity {
-    TwetterModel model = TwetterModel.getInstance();
-    ListView listView;
-    TweetListAdapter tweetListAdapter;
+    private TwetterModel model = TwetterModel.getInstance();
+    private ListView listView;
+    private TweetListAdapter tweetListAdapter;
+    private EditText searchBar;
+    private Button searchButton;
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         //checks if device has internet
-        if (isNetworkAvailable()){
-            Log.e("testTag2","yes, is available");
-        }else{
-            Log.e("testTag2","no, is NOT available");
+        if (isNetworkAvailable()) {
+            Log.e("testTag2", "yes, is available");
+        } else {
+            Log.e("testTag2", "no, is NOT available");
 
         }
 
@@ -44,20 +54,14 @@ public class MainActivity extends AppCompatActivity {
         authenticationTask.execute();
 
 
-        if (model.getBearertoken() == null){
+        if (model.getBearertoken() == null) {
             try {
                 throw new Exception("bearer token is null");
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.e("testTag","");
+                Log.e("testTag", "");
             }
         }
-
-
-
-
-
-
 
         try {
             String assetString = JSONParser.readAssetIntoString(this, "tweets.json");
@@ -77,11 +81,22 @@ public class MainActivity extends AppCompatActivity {
             Log.e("ERROR", "IOException: read asset into string");
         } catch (JSONException jsoE) {
             Log.e("ERROR", "JSONException @ mainactivity");
-        }finally {
-            listView = (ListView)findViewById(R.id.tweetlistView);
-            tweetListAdapter = new TweetListAdapter(this,model.getTweetArrayList());
-
+        } finally {
+            listView = (ListView) findViewById(R.id.tweetlistView);
+            tweetListAdapter = new TweetListAdapter(this, model.getTweetArrayList());
+            searchBar = (EditText)findViewById(R.id.et_searchbox);
+            searchButton = (Button)findViewById(R.id.bttn_search);
             listView.setAdapter(tweetListAdapter);
+
+            searchButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent searchIntent = new Intent(MainActivity.this, SearchActivity.class);
+                    searchIntent.putExtra("searchQuery",""+searchBar.getText());
+                    startActivity(searchIntent);
+                }
+            });
+
         }
 
 

@@ -31,6 +31,7 @@
         <Button
             android:layout_width="wrap_content"
             android:text="Zoek"
+            android:id="@+id/bttn_search"
             android:layout_weight="1"
             android:layout_height="wrap_content" />
 

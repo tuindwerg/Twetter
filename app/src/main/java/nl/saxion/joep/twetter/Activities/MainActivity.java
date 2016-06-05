@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private TweetListAdapter tweetListAdapter;
     private EditText searchBar;
     private Button searchButton;
+    private FloatingActionButton floatingActionButton;
 
     @Override
     protected void onPostResume() {
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
             Log.e("testTag2", "no, is NOT available");
 
         }
+
 
         OAuthAsyncTask authenticationTask = new OAuthAsyncTask();
         authenticationTask.execute();
@@ -84,20 +87,30 @@ public class MainActivity extends AppCompatActivity {
         } finally {
             listView = (ListView) findViewById(R.id.tweetlistView);
             tweetListAdapter = new TweetListAdapter(this, model.getTweetArrayList());
-            searchBar = (EditText)findViewById(R.id.et_searchbox);
-            searchButton = (Button)findViewById(R.id.bttn_search);
+            searchBar = (EditText) findViewById(R.id.et_searchbox);
+            searchButton = (Button) findViewById(R.id.bttn_search);
             listView.setAdapter(tweetListAdapter);
 
             searchButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent searchIntent = new Intent(MainActivity.this, SearchActivity.class);
-                    searchIntent.putExtra("searchQuery",""+searchBar.getText());
+                    searchIntent.putExtra("searchQuery", "" + searchBar.getText());
                     startActivity(searchIntent);
+                    overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_out);
                 }
             });
 
         }
+
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, PostTweetActivity.class);
+                startActivity(i);
+            }
+        });
 
 
     }

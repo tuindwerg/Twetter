@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -23,6 +26,9 @@ public class SearchActivity extends AppCompatActivity {
     private TweetListAdapter adapter;
     private TwetterModel model;
     private TextView searchLabel;
+    private EditText searchBar;
+    private Button searchButton;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,6 +54,28 @@ public class SearchActivity extends AppCompatActivity {
         searchLabel = (TextView) findViewById(R.id.tv_searchlabel);
         searchLabel.setText("Showing search result for : \"" + searchQuery + "\"");
 
+        searchBar = (EditText)findViewById(R.id.search_et_searchbox);
+        searchButton = (Button)findViewById(R.id.search_bttn_search);
 
+        searchBar.setText(searchQuery);
+
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //adapter.notifyDataSetChanged();
+                new GetSearchTweetsASyncTask(adapter).execute(searchBar.getText().toString());
+            }
+        });
+
+
+
+    }
+
+
+    @Override
+    protected void onPause() {
+        //adapter.notifyDataSetInvalidated();
+        //Log.e("testTag5","notified dataset invalidated");
+        super.onPause();
     }
 }

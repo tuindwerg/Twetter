@@ -63,7 +63,7 @@ public class GetSearchTweetsASyncTask extends  AsyncTask<String, Void, String> {
                is = httpURLConnection.getInputStream();
                 response = IOUtils.toString(is, "UTF-8");
                 is.close();
-                Log.e("testTag5","onbackground response : " + response);
+                Log.e("testTag5"," search: onbackground response : " + response);
                 return response;
 
 
@@ -86,6 +86,7 @@ public class GetSearchTweetsASyncTask extends  AsyncTask<String, Void, String> {
 
         }
 
+        Log.e("testTag","returned null @ search async");
 
         return null;
     }
@@ -93,7 +94,8 @@ public class GetSearchTweetsASyncTask extends  AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String result) {
         try {
-            Log.e("testTag5","onPostExecute : result = " + result);
+            TwetterModel.getInstance().getSearchTweetArrayList().clear();
+            Log.e("testTag5","search:onPostExecute : result = " + result);
             if (result == null){
                 return;
             }
@@ -104,7 +106,7 @@ public class GetSearchTweetsASyncTask extends  AsyncTask<String, Void, String> {
                 TwetterModel.getInstance().addSearchTweet(new Tweet(newTweetJsonObject));
             }
 
-            adapter.notifyDataSetInvalidated();
+            adapter.notifyDataSetChanged();
 
 
 

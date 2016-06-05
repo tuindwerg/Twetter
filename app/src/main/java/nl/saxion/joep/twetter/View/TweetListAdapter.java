@@ -12,7 +12,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import nl.saxion.joep.twetter.Model.ASync.GetImagesASyncTask;
 import nl.saxion.joep.twetter.Model.Tweet;
 import nl.saxion.joep.twetter.R;
 
@@ -47,9 +46,6 @@ public class TweetListAdapter extends ArrayAdapter<Tweet> {
                 .load(getItem(position).getOwner().getProfileImage())
                 .into(profilePicture);
 
-//        GetImagesASyncTask getImagesASyncTask = new GetImagesASyncTask(profilePicture);
-//        getImagesASyncTask.execute(getItem(position).getOwner().getProfileImage());
-        //TODO add ACTUAL tweet text in Tweet.java
         tweetText.setText(getItem(position).getActualTweetString());
 
 

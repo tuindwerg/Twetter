@@ -13,7 +13,7 @@ public class TwitterApi extends DefaultApi10a {
         return ourInstance;
     }
 
-    private TwitterApi() { 
+    private TwitterApi() {
     }
 
 

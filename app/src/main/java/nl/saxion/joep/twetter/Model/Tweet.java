@@ -7,7 +7,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by joepv on 13.mei.2016.
@@ -41,9 +40,10 @@ public class Tweet {
 
         try {
             String profileImage = tweet.getJSONObject("user").getString("profile_image_url");
-            String name = tweet.getJSONObject("user").getString("screen_name");
-            String screen_name = tweet.getJSONObject("user").getString("name");
-            owner = new TweetOwner(profileImage,name,screen_name);
+            String name = tweet.getJSONObject("user").getString("name");
+            String screen_name = tweet.getJSONObject("user").getString("screen_name");
+
+            owner = new TweetOwner(profileImage, name, screen_name);
 
 
         } catch (JSONException e) {
@@ -61,7 +61,7 @@ public class Tweet {
 
         try {
             JSONArray hashTagsJson = tweet.getJSONArray("hashtags");
-            for(int i=0;1<hashTagsJson.length();i++){
+            for (int i = 0; 1 < hashTagsJson.length(); i++) {
                 url.add(new UrlTweet(hashTagsJson.getJSONObject(i)));
             }
         } catch (JSONException e) {
@@ -72,7 +72,7 @@ public class Tweet {
         try {
             JSONArray userMentionJson = tweet.getJSONArray("user_mentions");
 
-            for(int i=0;1<userMentionJson.length();i++){
+            for (int i = 0; 1 < userMentionJson.length(); i++) {
                 url.add(new UrlTweet(userMentionJson.getJSONObject(i)));
             }
         } catch (JSONException e) {
@@ -81,7 +81,7 @@ public class Tweet {
 
         try {
             JSONArray mediaJson = tweet.getJSONArray("media");
-            for(int i=0;1<mediaJson.length();i++){
+            for (int i = 0; 1 < mediaJson.length(); i++) {
                 url.add(new UrlTweet(mediaJson.getJSONObject(i)));
             }
 
@@ -96,12 +96,12 @@ public class Tweet {
             // betere foutmelding.
             e.printStackTrace();
         }
-        try{
+        try {
             actualTweetString = tweet.getString("text");
 
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.e("testTag","cant get tweet text :c");
+            Log.e("testTag", "cant get tweet text :c");
         }
 
 

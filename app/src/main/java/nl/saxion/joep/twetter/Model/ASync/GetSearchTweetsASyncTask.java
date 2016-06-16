@@ -56,7 +56,6 @@ public class GetSearchTweetsASyncTask extends  AsyncTask<String, Void, String> {
             httpURLConnection.setRequestMethod("GET");
             httpURLConnection.setRequestProperty("Authorization", "Bearer "  + TwetterModel.getInstance().getBearertoken());
 
-
             int responseCode = httpURLConnection.getResponseCode();
 
             if (responseCode ==HttpURLConnection.HTTP_OK){

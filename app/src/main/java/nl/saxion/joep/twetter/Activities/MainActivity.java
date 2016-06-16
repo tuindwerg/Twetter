@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -13,18 +14,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.github.scribejava.core.model.OAuthRequest;
+import com.github.scribejava.core.model.Response;
+import com.github.scribejava.core.model.Verb;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-
 import nl.saxion.joep.twetter.Model.ASync.OAuthAsyncTask;
-import nl.saxion.joep.twetter.Model.JSONParser;
 import nl.saxion.joep.twetter.Model.Tweet;
 import nl.saxion.joep.twetter.Model.TwetterModel;
 import nl.saxion.joep.twetter.R;
 import nl.saxion.joep.twetter.View.TweetListAdapter;
+
+import static nl.saxion.joep.twetter.Model.TwetterModel.getAuthService;
 
 public class MainActivity extends AppCompatActivity {
     private TwetterModel model = TwetterModel.getInstance();
@@ -65,25 +69,27 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("testTag", "");
             }
         }
-
         try {
-            String assetString = JSONParser.readAssetIntoString(this, "tweets.json");
-            JSONObject assetOBJ = new JSONObject(assetString);
-
-            JSONArray statuses = assetOBJ.getJSONArray("statuses");
-
-            for (int i = 0; 1 < statuses.length(); i++) {
-                JSONObject newTweetJsonObject = statuses.getJSONObject(i);
-
-                model.addTweet(new Tweet(newTweetJsonObject));
-
-            }
 
 
-        } catch (IOException ioE) {
-            Log.e("ERROR", "IOException: read asset into string");
-        } catch (JSONException jsoE) {
-            Log.e("ERROR", "JSONException @ mainactivity");
+            GetUserTimeLineTask getUserTimeLineTask = new GetUserTimeLineTask();
+            getUserTimeLineTask.execute();
+
+
+//        try {
+//            String assetString = JSONParser.readAssetIntoString(this, "tweets.json");
+//            JSONObject assetOBJ = new JSONObject(assetString);
+//
+//            JSONArray statuses = assetOBJ.getJSONArray("statuses");
+//
+//            for (int i = 0; 1 < statuses.length(); i++) {
+//                JSONObject newTweetJsonObject = statuses.getJSONObject(i);
+//
+//                model.addTweet(new Tweet(newTweetJsonObject));
+//
+//            }
+
+
         } finally {
             listView = (ListView) findViewById(R.id.tweetlistView);
             tweetListAdapter = new TweetListAdapter(this, model.getTweetArrayList());
@@ -113,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
     }
 
     private boolean isNetworkAvailable() {
@@ -122,4 +127,56 @@ public class MainActivity extends AppCompatActivity {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
+
+
+    public class GetUserTimeLineTask extends AsyncTask<Void, Void, Void> {
+
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            Log.e("testTag4", "get user timeline : 1");
+
+            OAuthRequest request = new OAuthRequest(Verb.GET, "https://api.twitter.com/1.1/statuses/user_timeline.json", getAuthService());
+            getAuthService().signRequest(model.getAccessToken(), request);
+            Log.e("testTag4", "get user timeline : 2");
+
+            Response response = request.send();
+            Log.e("testTag4", "get user timeline : 3");
+
+            if (response.isSuccessful()) {
+                Log.e("testTag4", "get user timeline : 4");
+
+                String body = response.getBody();
+
+
+
+            try {
+                Log.e("testTag4", "response = " + body);
+                //JSONObject assetOBJ = new JSONObject(body);
+
+                //JSONArray statuses = assetOBJ.getJSONArray("statuses");
+                JSONArray statuses = new JSONArray(body);
+                for (int i = 0; 1 < statuses.length(); i++) {
+                    JSONObject newTweetJsonObject = statuses.getJSONObject(i);
+
+                    model.addTweet(new Tweet(newTweetJsonObject));
+
+                }
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+        tweetListAdapter.notifyDataSetChanged();
+
+    }
+}
 }

@@ -1,6 +1,7 @@
 package nl.saxion.joep.twetter.Activities;
 
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +12,13 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.github.scribejava.core.model.OAuthRequest;
+import com.github.scribejava.core.model.Response;
+import com.github.scribejava.core.model.Verb;
+
+import nl.saxion.joep.twetter.Model.TwetterModel;
 import nl.saxion.joep.twetter.R;
 
 public class PostTweetActivity extends AppCompatActivity {
@@ -28,7 +35,7 @@ public class PostTweetActivity extends AppCompatActivity {
         setFinishOnTouchOutside(false);
 
 
-        charCount_TextView = (TextView)findViewById(R.id.tv_charcount);
+        charCount_TextView = (TextView) findViewById(R.id.tv_charcount);
         et_tweet = (EditText) findViewById(R.id.et_tweet);
         et_tweet.addTextChangedListener(new TextWatcher() {
             @Override
@@ -44,7 +51,7 @@ public class PostTweetActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 charsLeft = 140 - et_tweet.getText().toString().length();
-                charCount_TextView.setText(charsLeft +"");
+                charCount_TextView.setText(charsLeft + "");
 
             }
         });
@@ -72,6 +79,10 @@ public class PostTweetActivity extends AppCompatActivity {
 
                     if (charsLeft <= 140) {
                         //TODO implement post tweet async task
+
+                        PostTweetTask task = new PostTweetTask();
+                        task.execute(et_tweet.getText().toString() + "");
+                        finish();
 
 
                     } else {
@@ -118,5 +129,41 @@ public class PostTweetActivity extends AppCompatActivity {
                 .show();
     }
 
+
+    class PostTweetTask extends AsyncTask<String, Void, Boolean> {
+        String responseString = "";
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+
+            OAuthRequest request =
+                    new OAuthRequest(Verb.POST, "https://api.twitter.com/1.1/statuses/update.json" , TwetterModel.getAuthService());
+
+            request.addParameter("status" , params[0]);
+
+            TwetterModel.getAuthService().signRequest(TwetterModel.getInstance().getAccessToken(), request);
+
+            Response response = request.send();
+
+            if (response.isSuccessful()) {
+                responseString = response.getBody();
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            super.onPostExecute(success);
+
+
+            if (success) {
+                Toast.makeText(PostTweetActivity.this, "success" , Toast.LENGTH_SHORT).show();
+
+            } else {
+                Toast.makeText(PostTweetActivity.this, "not success" , Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
 }

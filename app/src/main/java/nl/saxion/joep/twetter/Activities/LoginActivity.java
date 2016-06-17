@@ -78,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     public class VerifierTokenTask extends AsyncTask<String, Void, Void> {
-        String param;
+        private String param;
 
         public VerifierTokenTask(String param) {
             this.param = param;

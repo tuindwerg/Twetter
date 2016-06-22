@@ -37,25 +37,34 @@ public class LoginActivity extends AppCompatActivity {
     private TwetterModel model = TwetterModel.getInstance();
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (webView != null) {
+//            webView.clearHistory();
+//            webView.clearCache(true);
+        }
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        //Log.e("testTag", model.getAuthUrl());
-//        webView = (WebView) findViewById(R.id.wv_login);
-//        webView.loadUrl(model.getAuthUrl());
+
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (model.getAuthUrl() == null) {
+                    handler.postDelayed(this, 1000);
+
                     //doNothing
                 } else {
                     Log.e("testTag", model.getAuthUrl());
                     webView = (WebView) findViewById(R.id.wv_login);
-                    webView.clearCache(true);
-                    webView.clearHistory();
-                    clearCookies(LoginActivity.this);
+//                    webView.clearCache(true);
+//                    webView.clearHistory();
+//                    clearCookies(LoginActivity.this);
 
                     webView.loadUrl(model.getAuthUrl());
 
@@ -69,7 +78,6 @@ public class LoginActivity extends AppCompatActivity {
                                 //authorization granted
                                 Uri uri = Uri.parse(url);
                                 String verifierKey = uri.getQueryParameter("oauth_verifier");
-                                //model.setAccessToken(TwetterModel.getAuthService().getAccessToken(model.getRequestToken(),verifierKey));
                                 VerifierTokenTask task = new VerifierTokenTask(verifierKey);
                                 task.execute();
 

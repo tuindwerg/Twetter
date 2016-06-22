@@ -29,9 +29,9 @@ public class TwetterModel {
     private String authUrl;
     private OAuth1RequestToken requestToken;
 
-    private ActiveUser user;
+    private static ActiveUser user;
 
-    public ActiveUser getUser() {
+    public static ActiveUser getUser() {
         return user;
     }
 

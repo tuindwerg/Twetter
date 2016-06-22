@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.TextView;
 
+import nl.saxion.joep.twetter.Model.ActiveUser;
 import nl.saxion.joep.twetter.Model.TwetterModel;
 import nl.saxion.joep.twetter.R;
 
@@ -14,6 +16,8 @@ import nl.saxion.joep.twetter.R;
 
 public class UserProfileActivity extends AppCompatActivity {
     TwetterModel model;
+    TextView name, screenname, user_id, location, description, followercount, friendscount, created_at, timezone;
+    ActiveUser user = TwetterModel.getUser();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -24,5 +28,28 @@ public class UserProfileActivity extends AppCompatActivity {
         model = TwetterModel.getInstance();
 
         Log.e("testTag13", "active user createdat = " + model.getUser().getCreatedAt());
+
+        name = (TextView) findViewById(R.id.user_tv_name);
+        screenname = (TextView) findViewById(R.id.user_tv_screenname);
+        user_id = (TextView) findViewById(R.id.user_tv_id);
+        location = (TextView) findViewById(R.id.user_tv_location);
+        description = (TextView) findViewById(R.id.user_tv_description);
+        followercount = (TextView) findViewById(R.id.user_tv_follow_count);
+        friendscount = (TextView) findViewById(R.id.user_tv_friends_count);
+        created_at = (TextView) findViewById(R.id.user_tv_created_at);
+        timezone = (TextView) findViewById(R.id.user_tv_timezone);
+
+
+        name.setText(user.getName());
+        screenname.setText(user.getScreenName());
+        user_id.setText(user.getId() + "");
+        location.setText(user.getLocation());
+        description.setText(user.getDescription());
+        followercount.setText(user.getFollowersCount()+"");
+        friendscount.setText(user.getFriendsCount()+"");
+        created_at.setText(user.getCreatedAt());
+        timezone.setText(user.getTimeZone());
+
+
     }
 }

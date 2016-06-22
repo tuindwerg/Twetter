@@ -15,6 +15,10 @@ import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.model.Verb;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import nl.saxion.joep.twetter.Model.ActiveUser;
 import nl.saxion.joep.twetter.Model.TwetterModel;
 import nl.saxion.joep.twetter.R;
 
@@ -112,16 +116,32 @@ public class LoginActivity extends AppCompatActivity {
 
 
             Response response = request.send();
-
             if (response.isSuccessful()) {
                 String resp = response.getBody();
-                Log.e("testTag10","returned true");
+                Log.e("testTag1337", "login body = " + resp);
+                try {
+                    JSONObject user = new JSONObject(resp);
+                    //long id, String id_str, String name, String screenName, String location, String description, int followersCount, int friendsCount, String createdAt, String timeZone
+
+                    long id = user.getLong("id");
+                    String id_str = user.getString("id_str");
+                    String name = user.getString("name");
+                    String screenNameuser = user.getString("screen_name");
+                    String location = user.getString("location");
+                    String description = user.getString("description");
+                    int followersCount = user.getInt("followers_count");
+                    int friendsCount = user.getInt("friends_count");
+                    String createdAt = user.getString("created_at");
+                    String timeZone = user.getString("time_zone");
+
+                    model.setUser(new ActiveUser(id, id_str, name, screenNameuser, location, description, followersCount, friendsCount, createdAt, timeZone));
 
 
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 return true;
             }
-
-            Log.e("testTag10","returned false");
             return false;
         }
 

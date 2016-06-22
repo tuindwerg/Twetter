@@ -29,6 +29,16 @@ public class TwetterModel {
     private String authUrl;
     private OAuth1RequestToken requestToken;
 
+    private ActiveUser user;
+
+    public ActiveUser getUser() {
+        return user;
+    }
+
+    public void setUser(ActiveUser user) {
+        this.user = user;
+    }
+
     public ArrayList<Tweet> getUserTimeLineTweetList() {
         return userTimeLineTweetList;
     }

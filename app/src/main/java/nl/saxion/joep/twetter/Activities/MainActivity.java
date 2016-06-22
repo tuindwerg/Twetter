@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -14,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.github.scribejava.core.model.OAuthRequest;
@@ -48,15 +48,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.options_menu, menu);
+
+
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==R.id.options_refresh){
-            GetUserTimeLineTask getUserTimeLineTask = new GetUserTimeLineTask();
-            getUserTimeLineTask.execute();
+        if (item.getItemId() == R.id.options_refresh) {
+            refresh();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 
     @Override
@@ -91,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
             getUserTimeLineTask.execute();
 
 
-
         } finally {
             listView = (ListView) findViewById(R.id.tweetlistView);
             tweetListAdapter = new TweetListAdapter(this, model.getTweetArrayList());
@@ -123,6 +128,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void refresh(){
+        GetUserTimeLineTask task = new GetUserTimeLineTask();
+        task.execute();
+    }
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -151,34 +160,34 @@ public class MainActivity extends AppCompatActivity {
                 String body = response.getBody();
 
 
+                try {
+                    Log.e("testTag4", "response = " + body);
+                    //JSONObject assetOBJ = new JSONObject(body);
 
-            try {
-                Log.e("testTag4", "response = " + body);
-                //JSONObject assetOBJ = new JSONObject(body);
+                    //JSONArray statuses = assetOBJ.getJSONArray("statuses");
+                    JSONArray statuses = new JSONArray(body);
+                    for (int i = 0; 1 < statuses.length(); i++) {
+                        JSONObject newTweetJsonObject = statuses.getJSONObject(i);
 
-                //JSONArray statuses = assetOBJ.getJSONArray("statuses");
-                JSONArray statuses = new JSONArray(body);
-                for (int i = 0; 1 < statuses.length(); i++) {
-                    JSONObject newTweetJsonObject = statuses.getJSONObject(i);
+                        model.addTweet(new Tweet(newTweetJsonObject));
 
-                    model.addTweet(new Tweet(newTweetJsonObject));
+                    }
 
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-
-
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
+
+            return null;
         }
 
-        return null;
-    }
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            tweetListAdapter.notifyDataSetChanged();
+            Snackbar.make(findViewById(R.id.tweetlistView),"Refreshed",Snackbar.LENGTH_SHORT).show();
 
-    @Override
-    protected void onPostExecute(Void aVoid) {
-        super.onPostExecute(aVoid);
-        tweetListAdapter.notifyDataSetChanged();
-
+        }
     }
-}
 }

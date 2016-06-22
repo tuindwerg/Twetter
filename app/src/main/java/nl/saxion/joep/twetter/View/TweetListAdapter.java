@@ -80,8 +80,8 @@ public class TweetListAdapter extends ArrayAdapter<Tweet> {
                 } else {
                     v.setBackgroundResource(R.drawable.emoticon_cool_like);
                     getItem(position).setLikedByMe((!getItem(position).isLikedByMe()));
-                   UnlikeTask lTask = new UnlikeTask(getContext());
-                   lTask.execute(getItem(position).getId());
+                    UnlikeTask lTask = new UnlikeTask(getContext());
+                    lTask.execute(getItem(position).getId());
                 }
 
             }
@@ -94,10 +94,15 @@ public class TweetListAdapter extends ArrayAdapter<Tweet> {
                     v.setBackgroundResource(R.drawable.twitter_un_retweet);
                     getItem(position).setRetweetedByMe((!getItem(position).isRetweetedByMe()));
 
+                    RetweetTask retweetTask = new RetweetTask(getContext());
+                    retweetTask.execute(getItem(position).getId());
+
                 } else {
                     v.setBackgroundResource(R.drawable.twitter_retweet);
                     getItem(position).setRetweetedByMe((!getItem(position).isRetweetedByMe()));
 
+                    UnRetweetTask unRetweetTask = new UnRetweetTask(getContext());
+                    unRetweetTask.execute(getItem(position).getId());
                 }
             }
         });
@@ -176,6 +181,87 @@ public class TweetListAdapter extends ArrayAdapter<Tweet> {
                 Toast.makeText(mContext, "Status liked", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(mContext, "Status not succesfully liked", Toast.LENGTH_SHORT).show();
+
+            }
+
+        }
+    }
+
+
+    public class UnRetweetTask extends AsyncTask<Long, Void, Boolean> {
+        Context mContext;
+        String responseString = "";
+
+        public UnRetweetTask(Context context) {
+            mContext = context;
+        }
+
+        @Override
+        protected Boolean doInBackground(Long... params) {
+            String url = "https://api.twitter.com/1.1/statuses/unretweet/";
+            url += params[0].toString();
+            url += ".json";
+
+            OAuthRequest request = new OAuthRequest(Verb.POST, url, TwetterModel.getAuthService());
+
+            TwetterModel.getAuthService().signRequest(TwetterModel.getInstance().getAccessToken(), request);
+            Response response = request.send();
+
+            if (response.isSuccessful()) {
+                responseString = response.getBody();
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            super.onPostExecute(success);
+
+            if (success) {
+                Toast.makeText(mContext, "Status un-Retweeted", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(mContext, "Status not succesfully un-Retweeted", Toast.LENGTH_SHORT).show();
+
+            }
+
+        }
+    }
+
+    public class RetweetTask extends AsyncTask<Long, Void, Boolean> {
+        String responseString = "";
+        Context mContext;
+
+        public RetweetTask(Context context) {
+            mContext = context;
+        }
+
+        @Override
+        protected Boolean doInBackground(Long... params) {
+            String url = "https://api.twitter.com/1.1/statuses/retweet/";
+            url += params[0].toString();
+            url += ".json";
+
+            OAuthRequest request = new OAuthRequest(Verb.POST, url, TwetterModel.getAuthService());
+
+            TwetterModel.getAuthService().signRequest(TwetterModel.getInstance().getAccessToken(), request);
+            Response response = request.send();
+
+            if (response.isSuccessful()) {
+                responseString = response.getBody();
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            super.onPostExecute(success);
+
+            if (success) {
+                Toast.makeText(mContext, "Status Retweeted", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(mContext, "Status not succesfully Retweeted", Toast.LENGTH_SHORT).show();
 
             }
 

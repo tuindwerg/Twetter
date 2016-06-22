@@ -50,8 +50,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.options_menu, menu);
-
-
         return true;
     }
 
@@ -60,8 +58,67 @@ public class MainActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.options_refresh) {
             refresh();
             return true;
+        } else if (item.getItemId() == R.id.options_home) {
+            GetUserTimeLineTask task = new GetUserTimeLineTask();
+            task.execute();
+        } else if (item.getItemId() == R.id.options_profile) {
+            Intent i = new Intent(this,UserProfileActivity.class);
+            startActivity(i);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public class GetUserTimeLineTask extends AsyncTask<Void, Void, Void> {
+
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            Log.e("testTag4", "get user timeline : 1");
+
+            OAuthRequest request = new OAuthRequest(Verb.GET, "https://api.twitter.com/1.1/statuses/user_timeline.json", getAuthService());
+            getAuthService().signRequest(model.getAccessToken(), request);
+            Log.e("testTag4", "get user timeline : 2");
+
+            Response response = request.send();
+            Log.e("testTag4", "get user timeline : 3");
+
+            if (response.isSuccessful()) {
+                Log.e("testTag4", "get user timeline : 4");
+
+                String body = response.getBody();
+
+
+                try {
+                    Log.e("testTag4", "response = " + body);
+                    //JSONObject assetOBJ = new JSONObject(body);
+
+                    //JSONArray statuses = assetOBJ.getJSONArray("statuses");
+                    JSONArray statuses = new JSONArray(body);
+                    for (int i = 0; 1 < statuses.length(); i++) {
+                        JSONObject newTweetJsonObject = statuses.getJSONObject(i);
+
+                        model.addUserTimeLineTweet(new Tweet(newTweetJsonObject));
+
+                    }
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            //tweetListAdapter.notifyDataSetChanged();
+            //Snackbar.make(findViewById(R.id.tweetlistView),"Refreshed",Snackbar.LENGTH_SHORT).show();
+            Intent i = new Intent(MainActivity.this, UserTimelineActivity.class);
+            startActivity(i);
+
+        }
     }
 
 
@@ -93,8 +150,8 @@ public class MainActivity extends AppCompatActivity {
         try {
 
 
-            GetUserTimeLineTask getUserTimeLineTask = new GetUserTimeLineTask();
-            getUserTimeLineTask.execute();
+            GetHomeTimeLineTask getHomeTimeLineTask = new GetHomeTimeLineTask();
+            getHomeTimeLineTask.execute();
 
 
         } finally {
@@ -128,10 +185,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void refresh(){
-        GetUserTimeLineTask task = new GetUserTimeLineTask();
+    private void refresh() {
+        GetHomeTimeLineTask task = new GetHomeTimeLineTask();
         task.execute();
     }
+
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -140,14 +198,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public class GetUserTimeLineTask extends AsyncTask<Void, Void, Void> {
+    public class GetHomeTimeLineTask extends AsyncTask<Void, Void, Void> {
 
 
         @Override
         protected Void doInBackground(Void... params) {
             Log.e("testTag4", "get user timeline : 1");
 
-            OAuthRequest request = new OAuthRequest(Verb.GET, "https://api.twitter.com/1.1/statuses/user_timeline.json", getAuthService());
+            OAuthRequest request = new OAuthRequest(Verb.GET, "https://api.twitter.com/1.1/statuses/home_timeline.json", getAuthService());
             getAuthService().signRequest(model.getAccessToken(), request);
             Log.e("testTag4", "get user timeline : 2");
 
@@ -186,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             tweetListAdapter.notifyDataSetChanged();
-            Snackbar.make(findViewById(R.id.tweetlistView),"Refreshed",Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(R.id.tweetlistView), "Refreshed", Snackbar.LENGTH_SHORT).show();
 
         }
     }

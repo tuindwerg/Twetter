@@ -4,8 +4,19 @@
 
 
     <item
+        android:id="@+id/options_profile"
+        android:icon="@drawable/account"
+        android:title="Profile"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/options_home"
+        android:icon="@drawable/home"
+        android:title="Home"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/options_refresh"
         android:icon="@drawable/refresh"
-        app:showAsAction="always"
-        android:title="Refresh" />
+        android:title="Refresh"
+        app:showAsAction="always" />
 </menu>

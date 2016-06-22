@@ -17,6 +17,7 @@ import nl.saxion.joep.twetter.Model.ASync.TwitterApi;
 public class TwetterModel {
     private static TwetterModel ourInstance = new TwetterModel();
     private ArrayList<Tweet> tweetArrayList;
+    private ArrayList<Tweet> userTimeLineTweetList;
     private ArrayList<Tweet> searchTweetArrayList;
     private String bearertoken;
 
@@ -27,6 +28,13 @@ public class TwetterModel {
     private String consumerSecret = "";
     private String authUrl;
     private OAuth1RequestToken requestToken;
+
+    public ArrayList<Tweet> getUserTimeLineTweetList() {
+        return userTimeLineTweetList;
+    }
+    public void addUserTimeLineTweet(Tweet tweet) {
+        userTimeLineTweetList.add(tweet);
+    }
 
     private OAuth1AccessToken accessToken;
 
@@ -64,6 +72,7 @@ public class TwetterModel {
     private TwetterModel() {
         tweetArrayList = new ArrayList<>();
         searchTweetArrayList = new ArrayList<>();
+        userTimeLineTweetList = new ArrayList<>();
         authService = new ServiceBuilder()
                 .apiKey(API_KEY)
                 .apiSecret(API_SECRET)
@@ -83,6 +92,7 @@ public class TwetterModel {
     public void addTweet(Tweet tweet) {
         tweetArrayList.add(tweet);
     }
+
 
     public void addSearchTweet(Tweet tweet) {
         searchTweetArrayList.add(tweet);

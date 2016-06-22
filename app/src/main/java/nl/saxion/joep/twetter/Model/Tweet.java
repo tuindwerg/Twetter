@@ -20,8 +20,26 @@ public class Tweet {
     private ArrayList<HashTags> hashTags = new ArrayList<>();
     private ArrayList<UserMentions> userMentionses = new ArrayList<>();
     private ArrayList<Media> medias = new ArrayList<>();
+    private boolean isLikedByMe = false;
+    private boolean isRetweetedByMe = false;
 
-    private int id;
+    public boolean isLikedByMe() {
+        return isLikedByMe;
+    }
+
+    public void setLikedByMe(boolean likedByMe) {
+        isLikedByMe = likedByMe;
+    }
+
+    public boolean isRetweetedByMe() {
+        return isRetweetedByMe;
+    }
+
+    public void setRetweetedByMe(boolean retweetedByMe) {
+        isRetweetedByMe = retweetedByMe;
+    }
+
+    private long id;
     private String create;
     private String actualTweetString;
 
@@ -91,7 +109,7 @@ public class Tweet {
         }
 
         try {
-            id = tweet.getInt("id");
+            id = tweet.getLong("id");
         } catch (JSONException e) {
             // betere foutmelding.
             e.printStackTrace();
@@ -102,6 +120,16 @@ public class Tweet {
         } catch (JSONException e) {
             e.printStackTrace();
             Log.e("testTag", "cant get tweet text :c");
+        }
+        try{
+            isRetweetedByMe = tweet.getBoolean("retweeted");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        try {
+            isLikedByMe = tweet.getBoolean("favorited");
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
 
@@ -134,7 +162,7 @@ public class Tweet {
         //        hashTags.add();
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

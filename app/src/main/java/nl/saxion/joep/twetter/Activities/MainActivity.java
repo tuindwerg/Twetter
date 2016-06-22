@@ -9,9 +9,12 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.github.scribejava.core.model.OAuthRequest;
@@ -45,6 +48,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId()==R.id.options_refresh){
+            GetUserTimeLineTask getUserTimeLineTask = new GetUserTimeLineTask();
+            getUserTimeLineTask.execute();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -75,19 +90,6 @@ public class MainActivity extends AppCompatActivity {
             GetUserTimeLineTask getUserTimeLineTask = new GetUserTimeLineTask();
             getUserTimeLineTask.execute();
 
-
-//        try {
-//            String assetString = JSONParser.readAssetIntoString(this, "tweets.json");
-//            JSONObject assetOBJ = new JSONObject(assetString);
-//
-//            JSONArray statuses = assetOBJ.getJSONArray("statuses");
-//
-//            for (int i = 0; 1 < statuses.length(); i++) {
-//                JSONObject newTweetJsonObject = statuses.getJSONObject(i);
-//
-//                model.addTweet(new Tweet(newTweetJsonObject));
-//
-//            }
 
 
         } finally {

@@ -49,6 +49,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.UserProfileActivity"
+            android:parentActivityName=".Activities.MainActivity"
             android:screenOrientation="portrait" />
 
     </application>

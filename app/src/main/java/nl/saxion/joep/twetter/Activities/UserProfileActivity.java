@@ -43,11 +43,25 @@ public class UserProfileActivity extends AppCompatActivity {
         name.setText(user.getName());
         screenname.setText(user.getScreenName());
         user_id.setText(user.getId() + "");
-        location.setText(user.getLocation());
-        description.setText(user.getDescription());
-        followercount.setText(user.getFollowersCount()+"");
-        friendscount.setText(user.getFriendsCount()+"");
-        created_at.setText(user.getCreatedAt());
+
+        if (user.getLocation().isEmpty()) {
+            location.setText("Unknown location.");
+        } else {
+            location.setText(user.getLocation());
+        }
+
+        if (user.getDescription().isEmpty()) {
+            description.setText("No description.");
+        } else {
+            description.setText(user.getDescription());
+        }
+
+        followercount.setText(user.getFollowersCount() + "");
+        friendscount.setText(user.getFriendsCount() + "");
+        String temp[] = user.getCreatedAt().split("\\+");
+        created_at.setText(temp[0]);
+
+
         timezone.setText(user.getTimeZone());
 
 

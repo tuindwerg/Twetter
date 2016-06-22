@@ -1,13 +1,17 @@
 package nl.saxion.joep.twetter.Activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -49,6 +53,10 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     Log.e("testTag", model.getAuthUrl());
                     webView = (WebView) findViewById(R.id.wv_login);
+                    webView.clearCache(true);
+                    webView.clearHistory();
+                    clearCookies(LoginActivity.this);
+
                     webView.loadUrl(model.getAuthUrl());
 
                     webView.setWebViewClient(new WebViewClient() {
@@ -78,6 +86,26 @@ public class LoginActivity extends AppCompatActivity {
             }
         }, 1000);
 
+    }
+
+    /*
+       Clears all cookies to prevent webpage from re-using previous webview session, even after user has logged onto a different account
+     */
+    @SuppressWarnings("deprecation")
+    public static void clearCookies(Context context) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            CookieManager.getInstance().removeAllCookies(null);
+            CookieManager.getInstance().flush();
+        } else {
+            CookieSyncManager cookieSyncMngr = CookieSyncManager.createInstance(context);
+            cookieSyncMngr.startSync();
+            CookieManager cookieManager = CookieManager.getInstance();
+            cookieManager.removeAllCookie();
+            cookieManager.removeSessionCookie();
+            cookieSyncMngr.stopSync();
+            cookieSyncMngr.sync();
+        }
     }
 
 

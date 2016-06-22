@@ -19,6 +19,8 @@ public class UserProfileActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         model = TwetterModel.getInstance();
 
         Log.e("testTag13", "active user createdat = " + model.getUser().getCreatedAt());

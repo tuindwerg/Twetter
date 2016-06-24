@@ -5,9 +5,15 @@ package nl.saxion.joep.twetter.Model;
  */
 
 public class DirectMessage {
-    private String createdAt, sender;
+    private String createdAt, sender, text;
 
+    public String getText() {
+        return text;
+    }
 
+    public void setText(String text) {
+        this.text = text;
+    }
 
     public String getCreatedAt() {
         return createdAt;

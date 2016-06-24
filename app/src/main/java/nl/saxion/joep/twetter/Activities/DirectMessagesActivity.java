@@ -46,9 +46,9 @@ public class DirectMessagesActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        dmListView = (ListView)findViewById(R.id.lv_directmessages);
-        adapter = new DMListAdapter(this,directMessageArrayList);
-
+        dmListView = (ListView) findViewById(R.id.lv_directmessages);
+        adapter = new DMListAdapter(this, directMessageArrayList);
+        dmListView.setAdapter(adapter);
 
 
         RetreiveDirectMessagesTask dmTask = new RetreiveDirectMessagesTask();
@@ -66,14 +66,20 @@ public class DirectMessagesActivity extends AppCompatActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                LayoutInflater.from(getContext()).inflate(R.layout.directmessage_list_item, parent, false);
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.directmessage_list_item, parent, false);
             }
+
             TextView createdAt = (TextView) convertView.findViewById(R.id.dm_item_created_at);
             createdAt.setText(getItem(position).getCreatedAt());
+
             TextView sender = (TextView) convertView.findViewById(R.id.dm_item_sender);
             sender.setText(getItem(position).getSender());
 
+            TextView text =(TextView)convertView.findViewById(R.id.dm_item_text);
+            text.setText(getItem(position).getText());
+
             return convertView;
+
         }
     }
 
@@ -116,6 +122,10 @@ public class DirectMessagesActivity extends AppCompatActivity {
                         DirectMessage directMessage1 = new DirectMessage();
                         directMessage1.setCreatedAt(tempCreatedAt);
                         directMessage1.setSender(tempSender);
+                        String tempText = directMessage.getString("text");
+
+                        directMessage1.setText(tempText);
+
                         directMessageArrayList.add(directMessage1);
 
                     }

@@ -2,7 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
+    <item
+        android:id="@+id/options_direct_messages"
+        android:icon="@drawable/messages"
+        android:title="Direct Messages"
+        app:showAsAction="always" />
     <item
         android:id="@+id/options_profile"
         android:icon="@drawable/account"
@@ -19,4 +23,9 @@
         android:icon="@drawable/refresh"
         android:title="Refresh"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/options_logout"
+        android:title="Logout"
+        app:showAsAction="never" />
 </menu>

@@ -52,6 +52,13 @@
             android:parentActivityName=".Activities.MainActivity"
             android:screenOrientation="portrait" />
 
+
+        <activity
+            android:name=".Activities.DirectMessagesActivity"
+            android:label="Direct Messages"
+            android:parentActivityName=".Activities.MainActivity"
+            android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>

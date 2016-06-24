@@ -62,9 +62,18 @@ public class MainActivity extends AppCompatActivity {
             GetUserTimeLineTask task = new GetUserTimeLineTask();
             task.execute();
         } else if (item.getItemId() == R.id.options_profile) {
-            Intent i = new Intent(this,UserProfileActivity.class);
+            Intent i = new Intent(this, UserProfileActivity.class);
             startActivity(i);
+        } else if (item.getItemId() == R.id.options_logout) {
+            Intent i = new Intent(this, LoginActivity.class);
+            i.putExtra("LOGOUT", true);
+            startActivity(i);
+            finish();
+        }else if (item.getItemId() == R.id.options_direct_messages){
+            Intent z = new Intent(this,DirectMessagesActivity.class);
+            startActivity(z);
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -198,11 +207,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public class GetHomeTimeLineTask extends AsyncTask<Void, Void, Void> {
+    public class GetHomeTimeLineTask extends AsyncTask<Void, Void, Boolean> {
 
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Boolean doInBackground(Void... params) {
             Log.e("testTag4", "get user timeline : 1");
 
             OAuthRequest request = new OAuthRequest(Verb.GET, "https://api.twitter.com/1.1/statuses/home_timeline.json", getAuthService());
@@ -220,9 +229,7 @@ public class MainActivity extends AppCompatActivity {
 
                 try {
                     Log.e("testTag4", "response = " + body);
-                    //JSONObject assetOBJ = new JSONObject(body);
 
-                    //JSONArray statuses = assetOBJ.getJSONArray("statuses");
                     JSONArray statuses = new JSONArray(body);
                     for (int i = 0; 1 < statuses.length(); i++) {
                         JSONObject newTweetJsonObject = statuses.getJSONObject(i);
@@ -235,16 +242,22 @@ public class MainActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                return true;
             }
 
-            return null;
+            return false;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            tweetListAdapter.notifyDataSetChanged();
-            Snackbar.make(findViewById(R.id.tweetlistView), "Refreshed", Snackbar.LENGTH_SHORT).show();
+        protected void onPostExecute(Boolean success) {
+            super.onPostExecute(success);
+            if (success){
+                tweetListAdapter.notifyDataSetChanged();
+                Snackbar.make(findViewById(R.id.tweetlistView), "Refreshed", Snackbar.LENGTH_SHORT).show();
+            }else{
+                Snackbar.make(findViewById(R.id.tweetlistView),"Not refreshed: Check internet connection", Snackbar.LENGTH_SHORT).show();
+            }
+
 
         }
     }

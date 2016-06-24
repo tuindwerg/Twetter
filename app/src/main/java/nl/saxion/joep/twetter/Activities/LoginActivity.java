@@ -50,6 +50,15 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        Intent z = getIntent();
+        final boolean LOGOUT = z.getBooleanExtra("LOGOUT", false);
+        if (LOGOUT) {
+            TwetterModel.newInstance();
+            Log.e("testTag13", "just logged out");
+            Log.e("testTag13", "url = " +model.getAuthUrl());
+        }
+
+
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -60,12 +69,15 @@ public class LoginActivity extends AppCompatActivity {
 
                     //doNothing
                 } else {
-                    Log.e("testTag", model.getAuthUrl());
+                    Log.e("testTag13", model.getAuthUrl());
                     webView = (WebView) findViewById(R.id.wv_login);
-//                    webView.clearCache(true);
-//                    webView.clearHistory();
-//                    clearCookies(LoginActivity.this);
 
+
+                    if (LOGOUT) {
+//                        webView.clearCache(true);
+//                        webView.clearHistory();
+//                        clearCookies(LoginActivity.this);
+                    }
                     webView.loadUrl(model.getAuthUrl());
 
                     webView.setWebViewClient(new WebViewClient() {
@@ -73,15 +85,13 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public boolean shouldOverrideUrlLoading(WebView view, String url) {
                             Log.e("testTag10", " url = " + url);
-
+                            Log.e("testTag13", "url = " + url);
                             if (url.startsWith("http://www.defaultcallback.com")) {
                                 //authorization granted
                                 Uri uri = Uri.parse(url);
                                 String verifierKey = uri.getQueryParameter("oauth_verifier");
                                 VerifierTokenTask task = new VerifierTokenTask(verifierKey);
                                 task.execute();
-
-
                             }
 
 

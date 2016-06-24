@@ -31,6 +31,32 @@ public class TwetterModel {
 
     private static ActiveUser user;
 
+    public static void newInstance() {
+        ourInstance = new TwetterModel();
+
+    }
+
+
+    private TwetterModel() {
+        authUrl = null;
+        authService = null;
+
+        tweetArrayList = new ArrayList<>();
+        searchTweetArrayList = new ArrayList<>();
+        userTimeLineTweetList = new ArrayList<>();
+        authService = new ServiceBuilder()
+                .apiKey(API_KEY)
+                .apiSecret(API_SECRET)
+                .callback(OAUTH_CALLBACK_URL)
+                .build(TwitterApi.getInstance());
+
+        OAuthAsync oAuthAsync = new OAuthAsync();
+        oAuthAsync.execute();
+
+
+    }
+
+
     public static ActiveUser getUser() {
         return user;
     }
@@ -42,6 +68,7 @@ public class TwetterModel {
     public ArrayList<Tweet> getUserTimeLineTweetList() {
         return userTimeLineTweetList;
     }
+
     public void addUserTimeLineTweet(Tweet tweet) {
         userTimeLineTweetList.add(tweet);
     }
@@ -79,21 +106,6 @@ public class TwetterModel {
         return ourInstance;
     }
 
-    private TwetterModel() {
-        tweetArrayList = new ArrayList<>();
-        searchTweetArrayList = new ArrayList<>();
-        userTimeLineTweetList = new ArrayList<>();
-        authService = new ServiceBuilder()
-                .apiKey(API_KEY)
-                .apiSecret(API_SECRET)
-                .callback(OAUTH_CALLBACK_URL)
-                .build(TwitterApi.getInstance());
-
-        OAuthAsync oAuthAsync = new OAuthAsync();
-        oAuthAsync.execute();
-
-
-    }
 
     public String getAuthUrl() {
         return authUrl;

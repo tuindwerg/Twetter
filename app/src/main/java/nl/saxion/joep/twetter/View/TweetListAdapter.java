@@ -1,14 +1,11 @@
 package nl.saxion.joep.twetter.View;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +20,6 @@ import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.model.Verb;
 import com.squareup.picasso.Picasso;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.util.List;
@@ -128,38 +124,38 @@ public class TweetListAdapter extends ArrayAdapter<Tweet> {
             }
         });
 
-        opmaak(getItem(position),tweetText);
+        opmaak(getItem(position), tweetText);
         return convertView;
     }
 
 
     private void opmaak(Tweet tweet, TextView text) {
-        if (!tweet.getHashTags().isEmpty()) {
-            for (HashTags h : tweet.getHashTags()) {
-                SpannableString span = new SpannableString(text.getText());
-                span.setSpan(new ForegroundColorSpan(Color.parseColor("#FFB266")), h.getStartIndex(), h.getEndIndex(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                text.setText(span);
-            }
-        }
-        if (!tweet.getUrl().isEmpty()){
-            for (UrlTweet u : tweet.getUrl()){
-                SpannableString span = new SpannableString(text.getText());
-                span.setSpan(new ForegroundColorSpan(Color.BLUE),u.getStartIndex(),u.getEndIndex(),Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                text.setText(span);
-
-            }
-        }
-
-        if (!tweet.getUserMentionses().isEmpty()){
-            for (UserMentions m : tweet.getUserMentionses()){
-                SpannableString span = new SpannableString(text.getText());
-                span.setSpan(new ForegroundColorSpan(Color.GREEN),m.getStartIndex(),m.getEndIndex(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                text.setText(span);
-            }
-        }
+        String tempString = text.getText().toString();
 
         //converts special html entities to  text
-        text.setText(StringEscapeUtils.unescapeHtml4(text.getText().toString()));
+        tempString = StringEscapeUtils.unescapeHtml4(tempString);
+
+
+        //zorgt ervoor dat de tekst in een tweet er mooi uitziet: bijvoorbeeld Hashtags krijgen de kleur oranje
+        SpannableString spannableString = new SpannableString(tempString);
+        if (!tweet.getHashTags().isEmpty()) {
+            for (HashTags h : tweet.getHashTags()) {
+                spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#FF9933")), h.getStartIndex(), h.getEndIndex(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            }
+        }
+        if (!tweet.getUrl().isEmpty()) {
+            for (UrlTweet u : tweet.getUrl()) {
+                spannableString.setSpan(new ForegroundColorSpan(Color.BLUE), u.getStartIndex(), u.getEndIndex(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            }
+        }
+
+        if (!tweet.getUserMentionses().isEmpty()) {
+            for (UserMentions m : tweet.getUserMentionses()) {
+                spannableString.setSpan(new ForegroundColorSpan(Color.GREEN), m.getStartIndex(), m.getEndIndex(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            }
+        }
+        text.setText(spannableString);
+
     }
 
 

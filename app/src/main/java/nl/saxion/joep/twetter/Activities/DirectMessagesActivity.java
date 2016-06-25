@@ -36,6 +36,7 @@ public class DirectMessagesActivity extends AppCompatActivity {
     private ListView dmListView;
     private ArrayList<DirectMessage> directMessageArrayList;
     private DMListAdapter adapter;
+    private TextView dmCount;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,6 +51,7 @@ public class DirectMessagesActivity extends AppCompatActivity {
         adapter = new DMListAdapter(this, directMessageArrayList);
         dmListView.setAdapter(adapter);
 
+         dmCount = (TextView)findViewById(R.id.dm_count);
 
         RetreiveDirectMessagesTask dmTask = new RetreiveDirectMessagesTask();
         dmTask.execute();
@@ -70,7 +72,8 @@ public class DirectMessagesActivity extends AppCompatActivity {
             }
 
             TextView createdAt = (TextView) convertView.findViewById(R.id.dm_item_created_at);
-            createdAt.setText(getItem(position).getCreatedAt());
+            String[] tempCreatedAt = getItem(position).getCreatedAt().split("\\+");
+            createdAt.setText(tempCreatedAt[0]);
 
             TextView sender = (TextView) convertView.findViewById(R.id.dm_item_sender);
             sender.setText(getItem(position).getSender());
@@ -136,6 +139,7 @@ public class DirectMessagesActivity extends AppCompatActivity {
                     Log.e("testTag20", "json exception in DM task");
                 }
 
+                dmCount.setText("Je hebt " + directMessageArrayList.size() + " Direct Messages.");
                 adapter.notifyDataSetChanged();
             }
         }

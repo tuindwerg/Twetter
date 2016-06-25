@@ -41,11 +41,6 @@ public class MainActivity extends AppCompatActivity {
     private Button searchButton;
     private FloatingActionButton floatingActionButton;
 
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -192,6 +187,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        System.exit(0);
     }
 
     private void refresh() {

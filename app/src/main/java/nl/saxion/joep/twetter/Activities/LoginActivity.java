@@ -37,12 +37,9 @@ public class LoginActivity extends AppCompatActivity {
     private TwetterModel model = TwetterModel.getInstance();
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        if (webView != null) {
-//            webView.clearHistory();
-//            webView.clearCache(true);
-        }
+    protected void onRestart() {
+        super.onRestart();
+        TwetterModel.newInstance();
     }
 
     @Override

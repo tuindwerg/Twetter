@@ -129,9 +129,10 @@ public class MainActivity extends AppCompatActivity {
             startActivity(i);
         } else if (item.getItemId() == R.id.options_logout) {
             Intent i = new Intent(this, LoginActivity.class);
-            i.putExtra("LOGOUT", true);
-            startActivity(i);
-            finish();
+//            i.putExtra("LOGOUT", true);
+//            startActivity(i);
+//            finish();
+            onBackPressed();
         } else if (item.getItemId() == R.id.options_direct_messages) {
             Intent z = new Intent(this, DirectMessagesActivity.class);
             startActivity(z);

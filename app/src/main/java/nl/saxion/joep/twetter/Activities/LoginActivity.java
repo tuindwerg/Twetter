@@ -52,9 +52,8 @@ public class LoginActivity extends AppCompatActivity {
         if (LOGOUT) {
             TwetterModel.newInstance();
             Log.e("testTag13", "just logged out");
-            Log.e("testTag13", "url = " +model.getAuthUrl());
+            Log.e("testTag13", "url = " + model.getAuthUrl());
         }
-
 
 
         final Handler handler = new Handler();
@@ -87,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
                                 //authorization granted
                                 Uri uri = Uri.parse(url);
                                 String verifierKey = uri.getQueryParameter("oauth_verifier");
-                                VerifierTokenTask task = new VerifierTokenTask(verifierKey);
+                                VerifierTokenTask task = new VerifierTokenTask(verifierKey, LoginActivity.this);
                                 task.execute();
                             }
 
@@ -126,9 +125,11 @@ public class LoginActivity extends AppCompatActivity {
 
     public class VerifierTokenTask extends AsyncTask<String, Void, Void> {
         private String param;
+        private AppCompatActivity activity;
 
-        public VerifierTokenTask(String param) {
+        public VerifierTokenTask(String param, AppCompatActivity activity) {
             this.param = param;
+            this.activity = activity;
         }
 
         @Override
@@ -143,14 +144,18 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             Log.e("testTag10", "" + model.getAccessToken());
-            LoginTask loginTask = new LoginTask();
+            LoginTask loginTask = new LoginTask(activity);
             loginTask.execute();
         }
     }
 
 
     public class LoginTask extends AsyncTask<Void, Boolean, Boolean> {
+        AppCompatActivity activity;
 
+        public LoginTask(AppCompatActivity activity) {
+            this.activity = activity;
+        }
 
         @Override
         protected Boolean doInBackground(Void... params) {
@@ -195,7 +200,8 @@ public class LoginActivity extends AppCompatActivity {
                 Intent i = new Intent(LoginActivity.this, MainActivity.class);
 
                 startActivity(i);
-                finish();
+                activity.finish();
+
             }
 
         }

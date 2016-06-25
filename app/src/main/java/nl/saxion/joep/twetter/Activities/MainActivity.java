@@ -1,6 +1,7 @@
 package nl.saxion.joep.twetter.Activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -8,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -139,10 +141,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Closes application on backpress
+     */
     @Override
     public void onBackPressed() {
-        finish();
-        System.exit(0);
+        new AlertDialog.Builder(MainActivity.this,R.style.DialogTheme)
+                .setTitle("Afsluiten")
+                .setIcon(R.drawable.alert)
+                .setMessage("Weet je zeker dat je wilt afsluiten?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                        System.exit(0);
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //doNothing
+                        Log.i("MainActivity", "Gebruiker wilde niet afsluiten.");
+                    }
+                })
+                .show();
+
+
     }
 
     /**
@@ -162,6 +186,10 @@ public class MainActivity extends AppCompatActivity {
         task.execute();
     }
 
+    /**
+     * Checks whether user device has internet available.
+     * @return true when user device has internet.
+     */
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -174,26 +202,15 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-            Log.e("testTag4", "get user timeline : 1");
-
             OAuthRequest request = new OAuthRequest(Verb.GET, "https://api.twitter.com/1.1/statuses/user_timeline.json", getAuthService());
             getAuthService().signRequest(model.getAccessToken(), request);
-            Log.e("testTag4", "get user timeline : 2");
 
             Response response = request.send();
-            Log.e("testTag4", "get user timeline : 3");
 
             if (response.isSuccessful()) {
-                Log.e("testTag4", "get user timeline : 4");
-
                 String body = response.getBody();
-
-
                 try {
-                    Log.e("testTag4", "response = " + body);
-                    //JSONObject assetOBJ = new JSONObject(body);
 
-                    //JSONArray statuses = assetOBJ.getJSONArray("statuses");
                     JSONArray statuses = new JSONArray(body);
                     for (int i = 0; 1 < statuses.length(); i++) {
                         JSONObject newTweetJsonObject = statuses.getJSONObject(i);
@@ -201,7 +218,6 @@ public class MainActivity extends AppCompatActivity {
                         model.addUserTimeLineTweet(new Tweet(newTweetJsonObject));
 
                     }
-
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -235,7 +251,6 @@ public class MainActivity extends AppCompatActivity {
             Response response = request.send();
 
             if (response.isSuccessful()) {
-
                 String body = response.getBody();
                 //longInfo(body);
 
@@ -248,7 +263,6 @@ public class MainActivity extends AppCompatActivity {
                         model.addTweet(new Tweet(newTweetJsonObject));
 
                     }
-
 
                 } catch (JSONException e) {
                     e.printStackTrace();

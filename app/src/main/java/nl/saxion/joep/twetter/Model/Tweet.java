@@ -46,6 +46,10 @@ public class Tweet {
         return actualTweetString;
     }
 
+    /**
+     * Default constructor to create a tweet. Converts JSONObject to Tweet object.
+     * @param tweet the tweet to convert to object
+     */
     public Tweet(JSONObject tweet) {
         try {
             entities = tweet.getJSONObject("entities");
@@ -148,9 +152,6 @@ public class Tweet {
         return actualTweetString;
     }
 
-    private void addHashTags() {
-        //        hashTags.add();
-    }
 
     public long getId() {
         return id;

@@ -43,6 +43,72 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        //checks if device has internet
+        if (isNetworkAvailable()) {
+            Log.e("testTag2", "yes, is available");
+        } else {
+            Log.e("testTag2", "no, is NOT available");
+
+        }
+
+
+        OAuthAsyncTask authenticationTask = new OAuthAsyncTask();
+        authenticationTask.execute();
+
+
+        if (model.getBearertoken() == null) {
+            try {
+                throw new Exception("bearer token is null");
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("testTag", "");
+            }
+        }
+        try {
+
+
+            GetHomeTimeLineTask getHomeTimeLineTask = new GetHomeTimeLineTask();
+            getHomeTimeLineTask.execute();
+
+
+        } finally {
+            listView = (ListView) findViewById(R.id.tweetlistView);
+            tweetListAdapter = new TweetListAdapter(this, model.getTweetArrayList());
+            searchBar = (EditText) findViewById(R.id.et_searchbox);
+            searchButton = (Button) findViewById(R.id.bttn_search);
+            listView.setAdapter(tweetListAdapter);
+
+            searchButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent searchIntent = new Intent(MainActivity.this, SearchActivity.class);
+                    searchIntent.putExtra("searchQuery", "" + searchBar.getText());
+                    startActivity(searchIntent);
+
+                    //awesome animation for opening activity
+                    overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_out);
+                }
+            });
+
+        }
+
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, PostTweetActivity.class);
+                startActivity(i);
+            }
+        });
+
+
+    }
+
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.options_menu, menu);
         return true;
@@ -64,12 +130,43 @@ public class MainActivity extends AppCompatActivity {
             i.putExtra("LOGOUT", true);
             startActivity(i);
             finish();
-        }else if (item.getItemId() == R.id.options_direct_messages){
-            Intent z = new Intent(this,DirectMessagesActivity.class);
+        } else if (item.getItemId() == R.id.options_direct_messages) {
+            Intent z = new Intent(this, DirectMessagesActivity.class);
             startActivity(z);
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        System.exit(0);
+    }
+
+    /**
+     * Logs large Strings in logcat which would otherwise overflow
+     * @param str the large String to log
+     */
+    public static void longInfo(String str) {
+        if (str.length() > 4000) {
+            Log.e("testTag12", str.substring(0, 4000));
+            longInfo(str.substring(4000));
+        } else
+            Log.e("testTag12", str);
+    }
+
+    private void refresh() {
+        GetHomeTimeLineTask task = new GetHomeTimeLineTask();
+        task.execute();
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     public class GetUserTimeLineTask extends AsyncTask<Void, Void, Void> {
@@ -125,111 +222,24 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        //checks if device has internet
-        if (isNetworkAvailable()) {
-            Log.e("testTag2", "yes, is available");
-        } else {
-            Log.e("testTag2", "no, is NOT available");
-
-        }
-
-
-        OAuthAsyncTask authenticationTask = new OAuthAsyncTask();
-        authenticationTask.execute();
-
-
-        if (model.getBearertoken() == null) {
-            try {
-                throw new Exception("bearer token is null");
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.e("testTag", "");
-            }
-        }
-        try {
-
-
-            GetHomeTimeLineTask getHomeTimeLineTask = new GetHomeTimeLineTask();
-            getHomeTimeLineTask.execute();
-
-
-        } finally {
-            listView = (ListView) findViewById(R.id.tweetlistView);
-            tweetListAdapter = new TweetListAdapter(this, model.getTweetArrayList());
-            searchBar = (EditText) findViewById(R.id.et_searchbox);
-            searchButton = (Button) findViewById(R.id.bttn_search);
-            listView.setAdapter(tweetListAdapter);
-
-            searchButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent searchIntent = new Intent(MainActivity.this, SearchActivity.class);
-                    searchIntent.putExtra("searchQuery", "" + searchBar.getText());
-                    startActivity(searchIntent);
-                    overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_out);
-                }
-            });
-
-        }
-
-        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, PostTweetActivity.class);
-                startActivity(i);
-            }
-        });
-
-
-    }
-
-    @Override
-    public void onBackPressed() {
-        finish();
-        System.exit(0);
-    }
-
-    private void refresh() {
-        GetHomeTimeLineTask task = new GetHomeTimeLineTask();
-        task.execute();
-    }
-
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
-
     public class GetHomeTimeLineTask extends AsyncTask<Void, Void, Boolean> {
 
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            Log.e("testTag4", "get user timeline : 1");
 
             OAuthRequest request = new OAuthRequest(Verb.GET, "https://api.twitter.com/1.1/statuses/home_timeline.json", getAuthService());
+
             getAuthService().signRequest(model.getAccessToken(), request);
-            Log.e("testTag4", "get user timeline : 2");
 
             Response response = request.send();
-            Log.e("testTag4", "get user timeline : 3");
 
             if (response.isSuccessful()) {
-                Log.e("testTag4", "get user timeline : 4");
 
                 String body = response.getBody();
-
+                //longInfo(body);
 
                 try {
-                    Log.e("testTag4", "response = " + body);
 
                     JSONArray statuses = new JSONArray(body);
                     for (int i = 0; 1 < statuses.length(); i++) {
@@ -252,11 +262,11 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Boolean success) {
             super.onPostExecute(success);
-            if (success){
+            if (success) {
                 tweetListAdapter.notifyDataSetChanged();
                 Snackbar.make(findViewById(R.id.tweetlistView), "Refreshed", Snackbar.LENGTH_SHORT).show();
-            }else{
-                Snackbar.make(findViewById(R.id.tweetlistView),"Not refreshed: Check internet connection", Snackbar.LENGTH_SHORT).show();
+            } else {
+                Snackbar.make(findViewById(R.id.tweetlistView), "Not refreshed: Check internet connection", Snackbar.LENGTH_SHORT).show();
             }
 
 

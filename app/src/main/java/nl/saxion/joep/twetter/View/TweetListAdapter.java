@@ -1,7 +1,14 @@
 package nl.saxion.joep.twetter.View;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,17 +23,23 @@ import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.model.Verb;
 import com.squareup.picasso.Picasso;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import java.util.List;
 
+import nl.saxion.joep.twetter.Model.HashTags;
 import nl.saxion.joep.twetter.Model.Tweet;
 import nl.saxion.joep.twetter.Model.TwetterModel;
+import nl.saxion.joep.twetter.Model.UrlTweet;
+import nl.saxion.joep.twetter.Model.UserMentions;
 import nl.saxion.joep.twetter.R;
 
 /**
  * Created by joepv on 13.mei.2016.
  */
 public class TweetListAdapter extends ArrayAdapter<Tweet> {
-
+    private Tweet tweet;
 
     public TweetListAdapter(Context context, List<Tweet> objects) {
         super(context, -1, objects);
@@ -39,7 +52,7 @@ public class TweetListAdapter extends ArrayAdapter<Tweet> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.tweet_list_item, parent, false);
 
         }
-
+        tweet = getItem(position);
         TextView name, screenname, tweetText;
         ImageView profilePicture;
 
@@ -57,6 +70,14 @@ public class TweetListAdapter extends ArrayAdapter<Tweet> {
         tweetText.setText(getItem(position).getActualTweetString());
 
         ImageButton like = (ImageButton) convertView.findViewById(R.id.likeButton);
+
+        //for testing purposes
+        profilePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), " ayy lmao + " + getItem(position).getHashTags().size(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
         ImageButton retweet = (ImageButton) convertView.findViewById(R.id.retweet_button);
@@ -107,9 +128,40 @@ public class TweetListAdapter extends ArrayAdapter<Tweet> {
             }
         });
 
-
+        opmaak(getItem(position),tweetText);
         return convertView;
     }
+
+
+    private void opmaak(Tweet tweet, TextView text) {
+        if (!tweet.getHashTags().isEmpty()) {
+            for (HashTags h : tweet.getHashTags()) {
+                SpannableString span = new SpannableString(text.getText());
+                span.setSpan(new ForegroundColorSpan(Color.parseColor("#FFB266")), h.getStartIndex(), h.getEndIndex(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                text.setText(span);
+            }
+        }
+        if (!tweet.getUrl().isEmpty()){
+            for (UrlTweet u : tweet.getUrl()){
+                SpannableString span = new SpannableString(text.getText());
+                span.setSpan(new ForegroundColorSpan(Color.BLUE),u.getStartIndex(),u.getEndIndex(),Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                text.setText(span);
+
+            }
+        }
+
+        if (!tweet.getUserMentionses().isEmpty()){
+            for (UserMentions m : tweet.getUserMentionses()){
+                SpannableString span = new SpannableString(text.getText());
+                span.setSpan(new ForegroundColorSpan(Color.GREEN),m.getStartIndex(),m.getEndIndex(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                text.setText(span);
+            }
+        }
+
+        //converts special html entities to  text
+        text.setText(StringEscapeUtils.unescapeHtml4(text.getText().toString()));
+    }
+
 
     public class UnlikeTask extends AsyncTask<Long, Void, Boolean> {
         Context mContext;

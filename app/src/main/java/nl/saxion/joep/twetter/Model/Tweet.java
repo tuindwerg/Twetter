@@ -12,8 +12,7 @@ import java.util.ArrayList;
  * Created by joepv on 13.mei.2016.
  */
 public class Tweet {
-    private JSONObject inputJSONObject;
-
+    private JSONObject entities;
     private TweetOwner owner;
 
     private ArrayList<UrlTweet> url = new ArrayList<>();
@@ -48,6 +47,11 @@ public class Tweet {
     }
 
     public Tweet(JSONObject tweet) {
+        try {
+            entities = tweet.getJSONObject("entities");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         try {
             create = tweet.getJSONObject("user").getString("created_at");
@@ -68,30 +72,30 @@ public class Tweet {
             e.printStackTrace();
         }
         try {
-            JSONArray urlJson = tweet.getJSONArray("urls");
+            JSONArray urlJson = entities.getJSONArray("urls");
             for (int i = 0; i < urlJson.length(); i++) {
                 url.add(new UrlTweet(urlJson.getJSONObject(i)));
             }
         } catch (JSONException e) {
-            // betere foutmelding moet nog gedaan worden.
+            Log.i("Tweet_Creation", "No urls present.");
             e.printStackTrace();
         }
 
         try {
-            JSONArray hashTagsJson = tweet.getJSONArray("hashtags");
-            for (int i = 0; 1 < hashTagsJson.length(); i++) {
-                url.add(new UrlTweet(hashTagsJson.getJSONObject(i)));
+            JSONArray hashTagsJson = entities.getJSONArray("hashtags");
+            for (int i = 0; i < hashTagsJson.length(); i++) {
+                hashTags.add(new HashTags(hashTagsJson.getJSONObject(i)));
             }
         } catch (JSONException e) {
-            // betere foutmelding moet nog gedaan worden.
+            Log.i("Tweet_Creation", "No hashtags present.");
             e.printStackTrace();
         }
 
         try {
-            JSONArray userMentionJson = tweet.getJSONArray("user_mentions");
+            JSONArray userMentionJson = entities.getJSONArray("user_mentions");
 
-            for (int i = 0; 1 < userMentionJson.length(); i++) {
-                url.add(new UrlTweet(userMentionJson.getJSONObject(i)));
+            for (int i = 0; i < userMentionJson.length(); i++) {
+                userMentionses.add(new UserMentions(userMentionJson.getJSONObject(i)));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -99,7 +103,7 @@ public class Tweet {
 
         try {
             JSONArray mediaJson = tweet.getJSONArray("media");
-            for (int i = 0; 1 < mediaJson.length(); i++) {
+            for (int i = 0; i < mediaJson.length(); i++) {
                 url.add(new UrlTweet(mediaJson.getJSONObject(i)));
             }
 
@@ -121,7 +125,7 @@ public class Tweet {
             e.printStackTrace();
             Log.e("testTag", "cant get tweet text :c");
         }
-        try{
+        try {
             isRetweetedByMe = tweet.getBoolean("retweeted");
         } catch (JSONException e) {
             e.printStackTrace();
